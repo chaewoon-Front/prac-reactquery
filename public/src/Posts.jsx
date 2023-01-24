@@ -15,13 +15,18 @@ export function Posts() {
 
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if(currentPage < maxPostPage){
-    const nextPage = currentPage + 1;
-    queryClient.prefetchQuery(["posts", nextPage], () => fetchPosts(nextPage)
-    );
-    }
-  }, [currentPage], queryClient);
+  useEffect(
+    () => {
+      if (currentPage < maxPostPage) {
+        const nextPage = currentPage + 1;
+        queryClient.prefetchQuery(["posts", nextPage], () =>
+          fetchPosts(nextPage)
+        );
+      }
+    },
+    [currentPage],
+    queryClient
+  );
 
   const { data, isError, error, isLoading } = useQuery(
     ["posts", currentPage],
@@ -41,25 +46,27 @@ export function Posts() {
       </>
     );
 
-    return (
-      <>
+  return (
+    <>
       <ul>
         {data.map((post) => (
-          <li key={post.id}
-          onClick{() => setSelectedPost(post)}
-          >
+          <li key={post.id} onClick={() => setSelectedPost(post)}>
             {post.title}
-            </li>
+          </li>
         ))}
       </ul>
       <div>
-        <button disabled={seturrentPage <= 1} onClick={() => {
-          setCurrentPage((previousValue) => previousValue - 1);
-
-        }}>Previous page</button>
+        <button
+          disabled={seturrentPage <= 1}
+          onClick={() => {
+            setCurrentPage((previousValue) => previousValue - 1);
+          }}
+        >
+          Previous page
+        </button>
         <span> {currentPage + 1}</span>
       </div>
-      {selectedPost && <PostDetail post={selectedPost}/>}
-        </>
-    );
+      {selectedPost && <PostDetail post={selectedPost} />}
+    </>
+  );
 }
